@@ -1,0 +1,129 @@
+/**
+ * Stylesheet _style.scss
+ */
+
+html {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    background-color: #F0F0F0;
+}
+
+body {
+    width: 100vw;
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0;
+    background-color: #F0F0F0;
+}
+
+main {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 20px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.demo {
+    width: 100%;
+    height: 100vh;
+    background-color: #FFFFFF;
+    border-radius: 4px;
+    overflow: hidden;
+
+    @media all and (min-width: 768px) {
+        max-width: 640px;
+        max-height: 480px;
+    }
+}
+
+input[type=text] {
+    width: 100%;
+    margin-top: 10px;
+    border: 1px solid #888888;
+    padding: 6px 8px;
+    border-radius: 2px;
+}
+
+.slide {
+    color: #FFFFFF;
+    background-color: #666666;
+    padding: 40px;
+    font-family: sans-serif;
+
+    &:nth-of-type(even) {
+        color: #000000;
+        background-color: #CCCCCC;
+    }
+}
+
+.btn-group {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    font-family: sans-serif;
+    font-size: 12px;
+    margin-top: 20px;
+    background-color: #888888;
+    // border: 1px solid #888888;
+    border-radius: 100px;
+    overflow: hidden;
+    padding: 1px;
+    min-height: 28px;
+    flex-shrink: 0;
+
+    > * {
+        color: #FFFFFF;
+        padding: 5px 20px;
+        margin: 0;
+        background-color: #666666;
+        border: none;
+        min-width: 20px;
+        outline: none;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: row;
+        text-transform: uppercase;
+        transition: background-color .5s ease-in-out;
+        flex-wrap: nowrap;
+        font-family: sans-serif;
+        font-size: 10px;
+
+        &:not(:last-child) {
+            margin-right: 1px;
+        }
+
+        &:first-child {
+            border-radius: 100px 0 0 100px;
+        }
+
+        &:last-child {
+            border-radius: 0 100px 100px 0;
+        }
+
+        input {
+            margin-right: 10px;
+        }
+
+        &:focus {
+            background-color: #999999;
+        }
+
+        &:hover {
+            background-color: #888888;
+        }
+    }
+}
