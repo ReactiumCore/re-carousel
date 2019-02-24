@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import cn from 'classnames';
-import op from 'object-path';
 
 /**
  * -----------------------------------------------------------------------------
