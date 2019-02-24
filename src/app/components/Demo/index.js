@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+// import { Carousel, Slide } from 'reactium-carousel';
 import { Carousel, Slide } from 'components/ReCarousel';
 
 /**
@@ -27,6 +28,7 @@ export default class Demo extends Component {
                     <Carousel
                         loop={loop}
                         startIndex={0}
+                        speed={.5}
                         ref={elm => (this.carousel = elm)}>
                         <Slide>SLIDE - 0</Slide>
                         <Slide>SLIDE - 1</Slide>

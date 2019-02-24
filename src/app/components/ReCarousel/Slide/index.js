@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import cn from 'classnames';
+import op from 'object-path';
 
 /**
  * -----------------------------------------------------------------------------
@@ -9,9 +10,6 @@ import cn from 'classnames';
 export default class Slide extends Component {
     static defaultProps = {
         defaultStyle: {
-            display: 'none',
-            width: '100%',
-            height: '100%',
             flexShrink: 0,
         },
     };
@@ -40,7 +38,6 @@ export default class Slide extends Component {
             index,
             defaultStyle,
             next,
-            onComplete
         } = this.props;
 
         const cname = cn({
@@ -51,14 +48,14 @@ export default class Slide extends Component {
 
         const display = active === index || next === index;
 
-        style = {
+        const newStyle = {
             ...defaultStyle,
             ...style,
-            display: display ? 'block' : 'none',
+            display: display ? '' : 'none',
         };
 
         return (
-            <div className={cname} style={style} ref={this.slide}>
+            <div className={cname} style={newStyle} ref={this.slide}>
                 {children}
             </div>
         );

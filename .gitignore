@@ -61,7 +61,6 @@ typings/
 dist
 public
 build
-lib
 
 # OS generated files
 .DS_Store

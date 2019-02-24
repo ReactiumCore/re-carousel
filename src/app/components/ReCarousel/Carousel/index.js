@@ -28,13 +28,7 @@ export default class Carousel extends Component {
         active: 0,
         defaultStyle: {
             display: 'flex',
-            width: '100%',
-            height: '100%',
-            alignItems: 'center',
-            justifyContent: 'flex-start',
             flexWrap: 'no-wrap',
-            overflow: 'hidden',
-            position: 'relative',
         },
         loop: false,
         next: null,
@@ -62,6 +56,7 @@ export default class Carousel extends Component {
         };
 
         this.animating = false;
+        this.index = startIndex || active;
         this.onChange = this.onChange.bind(this);
         this.onComplete = this.onComplete.bind(this);
         this.onNext = this.onNext.bind(this);
@@ -87,12 +82,15 @@ export default class Carousel extends Component {
             return;
         }
 
-        const currentSlide = op.get(this.slides, `slide-${active}.slide.current`);
+        const currentSlide = op.get(
+            this.slides,
+            `slide-${active}.slide.current`,
+        );
         const nextSlide = op.get(this.slides, `slide-${next}.slide.current`);
 
         this.animating = true;
-        TweenMax.set(currentSlide, { display: 'block' });
-        TweenMax.set(nextSlide, { display: 'block' });
+        TweenMax.set(currentSlide, { display: '' });
+        TweenMax.set(nextSlide, { display: '' });
 
         const evt = { active, next, currentSlide, nextSlide };
 
@@ -101,7 +99,6 @@ export default class Carousel extends Component {
         const params = {
             onComplete: () => {
                 this.onComplete(evt);
-                this.onChange(evt);
             },
         };
 
@@ -157,11 +154,14 @@ export default class Carousel extends Component {
 
         this.animating = true;
 
-        const currentSlide = op.get(this.slides, `slide-${active}.slide.current`);
+        const currentSlide = op.get(
+            this.slides,
+            `slide-${active}.slide.current`,
+        );
         const nextSlide = op.get(this.slides, `slide-${next}.slide.current`);
 
-        TweenMax.set(currentSlide, { display: 'block', xPercent: -100 });
-        TweenMax.set(nextSlide, { display: 'block' });
+        TweenMax.set(currentSlide, { display: '', xPercent: -100 });
+        TweenMax.set(nextSlide, { display: '' });
 
         const evt = { active, next, currentSlide, nextSlide };
 
@@ -210,7 +210,9 @@ export default class Carousel extends Component {
     jumpTo(index) {
         const { active } = this.state;
 
-        if (index === active) { return; }
+        if (index === active) {
+            return;
+        }
 
         if (index < active) {
             this.prev(index);
@@ -224,6 +226,8 @@ export default class Carousel extends Component {
     onChange(evt) {
         const { active, next, currentSlide, nextSlide } = evt;
         const { onChange } = this.props;
+
+        this.index = next;
 
         if (typeof onChange === 'function') {
             onChange({
@@ -239,9 +243,8 @@ export default class Carousel extends Component {
         const { active, next, currentSlide, nextSlide } = evt;
         const { onComplete } = this.props;
 
-        TweenMax.set(nextSlide, { xPercent: 0, display: 'block' });
+        TweenMax.set(nextSlide, { xPercent: 0, display: '' });
 
-        this.setState({ active: next, next: null });
         this.animating = false;
 
         if (typeof onComplete === 'function') {
@@ -252,6 +255,12 @@ export default class Carousel extends Component {
                 currentSlide: nextSlide,
             });
         }
+
+        this.setState({ active: next, next: null });
+
+        setTimeout(() => {
+            this.onChange(evt);
+        }, 100);
     }
 
     onNext(evt) {

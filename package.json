@@ -1,6 +1,6 @@
 {
-    "name": "@reactium/carousel",
-    "version": "1.0.0",
+    "name": "reactium-carousel-x",
+    "version": "1.0.7",
     "main": "index.js",
     "scripts": {
         "start": "node build/.core/index.js",
@@ -28,12 +28,9 @@
     },
     "keywords": [
         "react",
-        "redux",
-        "framework",
-        "javascript",
-        "ddd"
+        "carousel"
     ],
-    "author": "Cam Tullos <cam@tullos.ninja> (http://cam.tullos.ninja) and John Dillick <john@dillick.us>",
+    "author": "Cam Tullos <cam@tullos.ninja> (http://cam.tullos.ninja)",
     "license": "MIT",
     "engines": {
         "node": "9.2.1",
@@ -41,7 +38,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/Atomic-Reactor/Reactium.git"
+        "url": "https://github.com/Atomic-Reactor/re-carousel.git"
     },
     "browser": {
         "parse/node": false
@@ -86,6 +83,7 @@
         "react-router-config": "^1.0.0-beta.4",
         "react-router-dom": "^4.2.2",
         "react-syntax-highlighter": "^8.0.1",
+        "reactium-carousel": "^1.0.7",
         "redbox-react": "^1.6.0",
         "redux": "^4.0.0",
         "redux-devtools": "^3.5.0",
