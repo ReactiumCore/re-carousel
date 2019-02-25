@@ -83,6 +83,7 @@
         "react-router-config": "^1.0.0-beta.4",
         "react-router-dom": "^4.2.2",
         "react-syntax-highlighter": "^8.0.1",
+        "react-touch-events": "^2.1.0",
         "reactium-carousel": "^1.0.9",
         "redbox-react": "^1.6.0",
         "redux": "^4.0.0",

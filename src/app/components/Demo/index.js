@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Carousel, Slide } from 'reactium-carousel';
-// import { Carousel, Slide } from 'components/ReCarousel';
+// import { Carousel, Slide } from 'reactium-carousel';
+import { Carousel, Slide } from 'components/ReCarousel';
 
 /**
  * -----------------------------------------------------------------------------
@@ -11,7 +11,17 @@ export default class Demo extends Component {
     carousel = null;
 
     state = {
-        loop: false,
+        autoplay: true,
+        duration: 5,
+        loop: true,
+        speed: 0.25,
+        startIndex: 0,
+        swipeable: true,
+    };
+
+    toggleAutoPlay() {
+        const { autoplay } = this.state;
+        this.setState({ autoplay: !autoplay });
     }
 
     toggleLoop() {
@@ -19,16 +29,57 @@ export default class Demo extends Component {
         this.setState({ loop: !loop });
     }
 
+    toggleSwipeable() {
+        const { swipeable } = this.state;
+        this.setState({ swipeable: !swipeable });
+    }
+
     render() {
-        const { loop } = this.state;
+        const {
+            autoplay,
+            duration,
+            loop,
+            speed,
+            startIndex,
+            swipeable,
+        } = this.state;
 
         return (
             <>
+                <div className='btn-group'>
+                    <label>
+                        <input
+                            type='checkbox'
+                            checked={autoplay}
+                            onChange={() => this.toggleAutoPlay()}
+                        />{' '}
+                        Autoplay
+                    </label>
+                    <label>
+                        <input
+                            type='checkbox'
+                            checked={loop}
+                            onChange={() => this.toggleLoop()}
+                        />{' '}
+                        Loop
+                    </label>
+                    <label>
+                        <input
+                            type='checkbox'
+                            checked={swipeable}
+                            onChange={() => this.toggleSwipeable()}
+                        />{' '}
+                        Swipeable
+                    </label>
+                </div>
                 <div className='demo'>
                     <Carousel
+                        autoplay={autoplay}
+                        duration={duration}
                         loop={loop}
-                        startIndex={0}
-                        speed={.5}
+                        startIndex={startIndex}
+                        speed={speed}
+                        swipeable={swipeable}
                         ref={elm => (this.carousel = elm)}>
                         <Slide>SLIDE - 0</Slide>
                         <Slide>SLIDE - 1</Slide>
@@ -42,10 +93,7 @@ export default class Demo extends Component {
                             <input type='text' placeholder='Do something...' />
                         </Slide>
                         <Slide>
-                            SLIDE - 4
-                            <p>
-                                You can't SUCKA!!
-                            </p>
+                            SLIDE - 4<p>You can't SUCKA!!</p>
                             <input type='text' placeholder='Say something...' />
                         </Slide>
                         <Slide>SLIDE - 5</Slide>
@@ -60,9 +108,6 @@ export default class Demo extends Component {
                         onClick={() => this.carousel.jumpTo(3)}>
                         Slide - 3
                     </button>
-                    <label>
-                        <input type='checkbox' checked={loop} onChange={() => this.toggleLoop()} /> Loop
-                    </label>
                     <button type='button' onClick={() => this.carousel.next()}>
                         next &rarr;
                     </button>

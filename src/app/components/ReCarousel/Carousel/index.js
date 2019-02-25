@@ -2,6 +2,7 @@ import op from 'object-path';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { TimelineMax, TweenMax, Power2 } from 'gsap/umd/TweenMax';
+import ReactTouchEvents from 'react-touch-events';
 
 /**
  * -----------------------------------------------------------------------------
@@ -11,35 +12,52 @@ import { TimelineMax, TweenMax, Power2 } from 'gsap/umd/TweenMax';
 export default class Carousel extends Component {
     static propTypes = {
         active: PropTypes.number,
-        defaultStyle: PropTypes.object,
+        autoplay: PropTypes.bool,
+        duration: PropTypes.number,
         loop: PropTypes.bool,
         next: PropTypes.number,
         onChange: PropTypes.func,
         onComplete: PropTypes.func,
         onNext: PropTypes.func,
+        onPause: PropTypes.func,
+        onPlay: PropTypes.func,
         onPrev: PropTypes.func,
+        onResume: PropTypes.func,
+        onStop: PropTypes.func,
+        pauseOnHover: PropTypes.bool,
         previous: PropTypes.number,
         speed: PropTypes.number,
         startIndex: PropTypes.number,
         style: PropTypes.object,
+        swipeable: PropTypes.bool,
     };
 
     static defaultProps = {
         active: 0,
-        defaultStyle: {
-            display: 'flex',
-            flexWrap: 'no-wrap',
-        },
+        autoplay: false,
+        duration: 10,
         loop: false,
         next: null,
         onChange: null,
         onComplete: null,
+        onPause: null,
+        onPlay: null,
+        onPrev: null,
+        onResume: null,
+        onStop: null,
         onNext: null,
+        pauseOnHover: true,
         previous: null,
-        speed: 0.25,
+        speed: 0.5,
         startIndex: 0,
         style: {},
+        swipeable: true,
     };
+
+    static defaultStyle = {
+        display: 'flex',
+        flexWrap: 'no-wrap',
+    }
 
     constructor(props) {
         super(props);
@@ -56,14 +74,67 @@ export default class Carousel extends Component {
         };
 
         this.animating = false;
+        this.container = null;
         this.index = startIndex || active;
+        this.paused = false;
+        this.timer = null;
+
         this.onChange = this.onChange.bind(this);
         this.onComplete = this.onComplete.bind(this);
         this.onNext = this.onNext.bind(this);
-        this.onPrev = this.onPrev.bind(this);
+        this.onSwipe = this.onSwipe.bind(this);
         this.next = this.next.bind(this);
+        this.pause = this.pause.bind(this);
+        this.play = this.play.bind(this);
         this.prev = this.prev.bind(this);
+        this.resume = this.resume.bind(this);
+        this.stop = this.stop.bind(this);
         this.jumpTo = this.jumpTo.bind(this);
+    }
+
+    componentDidUpdate(prevProps) {
+        const { autoplay: prevautoplay } = prevProps;
+        const { autoplay } = this.props;
+
+        if (prevautoplay !== autoplay) {
+            if (autoplay === true) {
+                this.play();
+            } else {
+                this.stop();
+            }
+        }
+    }
+
+    componentDidMount() {
+        if (typeof window !== 'undefined') {
+            this.container.addEventListener('mouseenter', this.pause);
+            this.container.addEventListener('mouseleave', this.resume);
+            this.play();
+        }
+    }
+
+    componentWillUnmount() {
+        if (typeof window !== 'undefined') {
+            this.stop();
+            this.container.removeEventListener('mouseenter', this.pause);
+            this.container.removeEventListener('mouseleave', this.resume);
+        }
+    }
+
+    jumpTo(index) {
+        const { active } = this.state;
+
+        if (index === active) {
+            return;
+        }
+
+        if (index < active) {
+            this.prev(index);
+        }
+
+        if (index >= active) {
+            this.next(index);
+        }
     }
 
     next(next) {
@@ -133,6 +204,41 @@ export default class Carousel extends Component {
                 { xPercent: -100, ease: Power2.easeInOut },
                 0,
             );
+        }
+    }
+
+    pause() {
+        const { onPause, pauseOnHover } = this.props;
+        if (pauseOnHover !== true) { return; }
+
+        this.paused = true;
+
+        if (typeof onPause === 'function') {
+            onPause({ index: this.index });
+        }
+    }
+
+    play(index) {
+        let { autoplay = false, duration, onPlay } = this.props;
+
+        if (autoplay !== true) {
+            return;
+        }
+
+        this.stop(true);
+
+        if (index) {
+            this.next(index);
+        }
+
+        this.timer = setInterval(() => {
+            if (this.paused !== true) {
+                this.next();
+            }
+        }, duration * 1000);
+
+        if (typeof onPlay === 'function') {
+            onPlay({ index: this.index });
         }
     }
 
@@ -207,19 +313,26 @@ export default class Carousel extends Component {
         }
     }
 
-    jumpTo(index) {
-        const { active } = this.state;
+    resume() {
+        const { onResume } = this.props;
 
-        if (index === active) {
-            return;
+        this.paused = false;
+
+        if (typeof onResume === 'function') {
+            onResume({ index: this.index });
+        }
+    }
+
+    stop(silent) {
+        const { onStop } = this.props;
+
+        if (this.timer) {
+            clearInterval(this.timer);
+            this.timer = null;
         }
 
-        if (index < active) {
-            this.prev(index);
-        }
-
-        if (index >= active) {
-            this.next(index);
+        if (!silent && typeof onStop === 'function') {
+            onStop({ index: this.index });
         }
     }
 
@@ -240,6 +353,7 @@ export default class Carousel extends Component {
     }
 
     onComplete(evt) {
+        this.play();
         const { active, next, currentSlide, nextSlide } = evt;
         const { onComplete } = this.props;
 
@@ -264,6 +378,7 @@ export default class Carousel extends Component {
     }
 
     onNext(evt) {
+        this.stop();
         const { onNext } = this.props;
         if (typeof onNext === 'function') {
             onNext(evt);
@@ -271,35 +386,59 @@ export default class Carousel extends Component {
     }
 
     onPrev(evt) {
+        this.stop();
         const { onPrev } = this.props;
         if (typeof onPrev === 'function') {
             onPrev(evt);
         }
     }
 
+    onSwipe(dir) {
+        const { swipeable } = this.props;
+
+        if (swipeable !== true) { return; }
+
+        switch (dir) {
+        case 'left':
+            this.next();
+            break;
+
+        case 'right':
+            this.prev();
+            break;
+        }
+    }
+
     render() {
         let { active, next, style } = this.state;
-        const { children, defaultStyle } = this.props;
+        const { children } = this.props;
 
         style = {
-            ...defaultStyle,
+            ...Carousel.defaultStyle,
             ...style,
         };
 
         return (
-            <div className='carousel' style={style}>
-                {React.Children.map(children, (child, index) =>
-                    React.cloneElement(child, {
-                        active,
-                        index,
-                        next,
-                        onComplete: this.onComplete,
-                        ref: slide => {
-                            this.slides[`slide-${index}`] = slide;
-                        },
-                    }),
-                )}
-            </div>
+            <ReactTouchEvents onSwipe={this.onSwipe} onTap={this.pause}>
+                <div
+                    className='carousel'
+                    style={style}
+                    ref={elm => {
+                        this.container = elm;
+                    }}>
+                    {React.Children.map(children, (child, index) =>
+                        React.cloneElement(child, {
+                            active,
+                            index,
+                            next,
+                            onComplete: this.onComplete,
+                            ref: slide => {
+                                this.slides[`slide-${index}`] = slide;
+                            },
+                        }),
+                    )}
+                </div>
+            </ReactTouchEvents>
         );
     }
 }
