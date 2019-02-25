@@ -1,64 +1,193 @@
-![](https://image.ibb.co/ee2WaG/atomic_reactor.png)
+After spending hours trying to find a React carousel that fit my extremely basic needs:
 
-# Reactium
+1. No style sheets to force my way into to customize the carousel.
+2. Supply a component or markup to the carousel.
+3. Autosize the size of the slide to the parent container.
+4. Control the carousel with any button or component.
+5. Loop.
+6. Set initial slide index.
+7. Disable tabbing to next slide. This is the most important as I was using a form in each slide and didn't want the carousel to jump to the next slide until the current slide was validated.
 
-An opinionated framework for creating React + Redux apps.
+I decided to roll yet another carousel because my basic needs couldn't be met by the masses.
 
-[Reactium documentation](https://reactium.io/get-started)
+> **1.1.0 Update:** Added autoplay and swipe left/right to navigate through slides on mobile. Added autoplay.
 
-## Quick Start
-
-To run in **front-end only** (no server side rendering) development mode from your project directory for local development:
-
-```
-$ npm install
-$ npm run local
-```
-
-To run in **server side rendering** development mode from your project directory for local development:
+## Installation
 
 ```
-$ npm install
-$ npm run local:ssr
+npm i --save reactium-carousel
 ```
 
-## The Approach
+## Usage
 
-Reactium follows Domain Drive Design (DDD) and aims to ease the creation of complex applications by connecting the related pieces of the software into an ever-evolving model.
+```
+import React from 'react';
+import { Carousel, Slide } from 'reactium-carousel';
 
-DDD focuses on three core principles:
+// Your component
+export default class Demo extends React.Component {
 
--   Focus on the core domain and domain logic.
--   Base complex designs on models of the domain.
--   Constantly collaborate with domain experts, in order to improve the application model and resolve any emerging domain-related issues.
+    constructor(props) {
+        super(props);
 
-### Advantages of Domain Driven Design
+        // Create a reference to the carousel
+        // so we can control it with buttons
+        this.carousel = null;
+    }
 
--   **Eases Communication:** With an early emphasis on establishing a common and ubiquitous language related to the domain model of the project, teams will often find communication throughout the entire development life cycle to be much easier. Typically, DDD will require less technical jargon when discussing aspects of the application, since the ubiquitous language established early on will likely define simpler terms to refer to those more technical aspects.
--   **Improves Flexibility:** Since DDD is based around modularity, nearly everything within the domain model will be based on an object and will, therefore, be quite encapsulated. This allows for various components, or even the entire system as a whole, to be altered and improved on a regular, continuous basis.
--   **Emphasizes Domain Over Interface:** Since DDD is the practice of building around the concepts of domain and what the domain experts within the project advise, DDD will often produce applications that are accurately suited for and representative of the domain at hand, as opposed to those applications which emphasize the UI/UX first and foremost. While an obvious balance is required, the focus on domain means that a DDD approach can produce a product that resonates well with the audience associated with that domain.
--   **Encourages Iterative Practices:** DDD practices strongly rely on constant iteration and continuous integration in order to build a malleable project that can adjust itself when necessary. Some organizations may have trouble with these practices, particularly if their past experience is largely tied to less-flexible development models, such as the waterfall model or the like.
+    render() {
+        return (
+            <div>
+                <div style={{width: 500, height: 500}}>
+                    <Carousel speed={0.25} loop={true} startIndex={0} ref={elm => (this.carousel = elm)}>
+                        <Slide>SLIDE - 1</Slide>
+                        <Slide>SLIDE - 2</Slide>
+                        <Slide>SLIDE - 3</Slide>
+                    </Carousel>
+                </div>
+                <div>
+                    <button type='button' onClick={() => this.carousel.prev()}>
+                        back
+                    </button>
+                    <button type='button' onClick={() => this.carousel.next()}>
+                        next
+                    </button>
+                    <button type='button' onClick={() => this.carousel.jumpTo(2)}>
+                        Slide - 3
+                    </button>
+                </div>
+            </div>
+        )
+    }
+}
+```
 
-## Styling
+## Carousel Props
 
-Reactium takes the approach of **NOT** bundling CSS in JS.
+##### autoplay
+_Boolean_ : Autoplay the slides and display for a fixed period of time: `duration`.
 
-There are a many reasons why, but the most important ones to us are:
+_Default_ : false
 
--   Traditional styling allows you to declare which style wins very clearly and easily.
--   Bundling the styles as a separate file allow for easy holistic replacement.
--   Easy delivery of the styles to a CDN or other resource management tool.
--   Faster Webpack compilation.
+##### duration
+_Number_ : Time in seconds to display a slide when `autoplay` is `true`.
 
-## Reactium Features
+_Default_ : 10
 
--   **Fast Local Development Workflow:** Javascript tooling is hard, laborious, and annoying. We've spent a lot of time working through dozens of _"what if..."_ scenarios to deliver a minimal pain dev workflow!
--   **Built-in Design System:** No need to have a separate design system like Pattern Lab or Storybook. [Learn more](https://github.com/Atomic-Reactor/Reactium/blob/master/docs/design-system.md).
--   **Robust Command Line Interface:** Reactium heavily relies on boiler-plated code to normalize and ease the dev workflow. Creating a component or a design system element can be done with the stroke of a few keys. No need to memorize all the commands either, you can use `--flags` or follow prompts. You can even customize the CLI by replacing or creating your own commands. [Learn more](https://www.npmjs.com/package/atomic-reactor-cli).
--   **Easy Deployment:** Reactium creates a Node server for both front-end and server side rendering making it easy to deploy to the host of your choice. We even have a docker setup included for you dev-opers.
--   **Single Page App or Isolated Component Development:** Build anything from a full website to a single component and package for distribution.
--   **Built-in Redux Support:** Learning Redux can be hard. Sure you might have the basics down but building an application with it can quickly escalate to frustration and nightmares. Our simple Redux pattern makes it super easy to build stateful applications. Learn more about [Redux](https://redux.js.org/).
--   **Built-in React Router Support**: Build routed websites in a single application with no additional setup. Learn more about [React Router](https://reacttraining.com/react-router/web/guides/quick-start)
--   **Plugin Architecture**: Dynamic composition where there's no need to hard code `import` statements through out your codebase. Simply identify "zones" where components can be injected. [Learn more](https://github.com/Atomic-Reactor/Reactium/blob/master/docs/plugins.md).
+##### loop
+_Boolean_ : Loop back to the first slide when at the end of the slides list.
 
-[More documentation](https://github.com/Atomic-Reactor/Reactium/tree/master/docs).
+_Default_ : false
+
+##### pauseOnHover
+_Boolean_ : Pause `autoplay` on mouse hover.
+
+_Default_ : true
+
+##### speed
+_Number_ : Time in seconds of the slide animation.
+
+_Default_ : 0.5
+
+##### startIndex
+_Number_ : Zero based integer that sets the initial slide displayed.
+
+_Default_ : 0
+
+##### style
+_Object_ : Style object applied to the `Carousel.container` DOM element.
+
+##### swipeable
+_Boolean_ : Enable/Disable swipe navigation when in a mobile view.
+
+_Default_ : true
+
+
+## Carousel Public Properties
+
+##### animating
+_Boolean_ : The animation status.
+
+##### container
+_DOMElement_ : The Carousel wrapper `<div>` element.
+
+##### index
+_Number_ : The active slide index.
+
+##### paused
+_Boolean_ : The autoplay status.
+
+
+## Carousel Methods
+
+##### next()
+Navigate to the next slide. If loop is `true`, navigate to the first slide.
+
+##### prev()
+Navigate to the prev slide. If loop is `true`, navigate to the last slide.
+
+##### jumpTo(index:Number)
+Navigate to the specified slide index.
+
+##### play()
+Start the autoplay. This will reset the timer back to zero.
+
+##### pause()
+Pause the autoplay and sets the `paused` property to: true.
+
+##### resume()
+Resume the autoplay and sets the `paused` property to: false.
+
+##### stop()
+Stop the autoplay. This will reset the timer back to zero.
+
+
+## Carousel Events
+
+##### onComplete
+Triggered after the animation has completed.
+
+##### onChange
+Triggered after the animation has completed and state update.
+
+##### onNext / onPrev
+Triggered before the next/previous animation.
+
+##### onPlay
+Triggered when `play()` function is called.
+
+##### onPause
+Triggered when the `pause()` function is called.
+
+##### onResume
+Triggered when the `resume()` function is called.
+
+##### onStop
+Triggered when the `stop()` function is called.
+
+
+## Roadmap
+
+These features we not apart of my initial release because I didn't need them at the time.
+
+1. ~~Autoplay~~. _Added in 1.1.0_
+2. ~~Swipe next/prev~~. _Added in 1.1.0_
+
+
+## Contributing
+The src is built on [Reactium](http://reactium.io).. learn that $#!+
+
+No really PRs are more than welcome...
+
+Clone the source repo from [here](https://github.com/Atomic-Reactor/re-carousel).
+
+Install dependencies and run locally:
+
+```
+$ cd /Your/Copy/of/repo
+$ npm install && npm run local
+```
+
+Navigate to the `~/src/app/components/ReCarousel` directory.
+
+**Profit.**
