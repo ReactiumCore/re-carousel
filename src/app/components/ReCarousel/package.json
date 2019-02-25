@@ -1,6 +1,6 @@
 {
   "name": "reactium-carousel",
-  "version": "1.0.9",
+  "version": "1.1.0",
   "main": "index.js",
   "author": "Cam Tullos <cam@tullos.ninja> (http://cam.tullos.ninja)",
   "dependencies": {

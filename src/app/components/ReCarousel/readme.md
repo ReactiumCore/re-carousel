@@ -10,7 +10,7 @@ After spending hours trying to find a React carousel that fit my extremely basic
 
 I decided to roll yet another carousel because my basic needs couldn't be met by the masses.
 
-> 1.1.0 Update: Added swipe left/right to navigate through slides on mobile. Added autoplay.
+> **1.1.0 Update:** Added autoplay and swipe left/right to navigate through slides on mobile. Added autoplay.
 
 ## Installation
 
@@ -177,4 +177,17 @@ These features we not apart of my initial release because I didn't need them at 
 ## Contributing
 The src is built on [Reactium](http://reactium.io).. learn that $#!+
 
-PRs are more than welcome.
+No really PRs are more than welcome...
+
+Clone the source repo from [here](https://github.com/Atomic-Reactor/re-carousel).
+
+Install dependencies and run locally:
+
+```
+$ cd /Your/Copy/of/repo
+$ npm install && npm run local
+```
+
+Navigate to the `~/src/app/components/ReCarousel` directory.
+
+**Profit.**

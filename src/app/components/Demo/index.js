@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-// import { Carousel, Slide } from 'reactium-carousel';
-import { Carousel, Slide } from 'components/ReCarousel';
+import { Carousel, Slide } from 'reactium-carousel';
+// import { Carousel, Slide } from 'components/ReCarousel';
 
 /**
  * -----------------------------------------------------------------------------
