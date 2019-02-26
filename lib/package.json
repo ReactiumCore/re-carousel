@@ -1,12 +1,13 @@
 {
   "name": "reactium-carousel",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "main": "index.js",
   "author": "Cam Tullos <cam@tullos.ninja> (http://cam.tullos.ninja)",
   "dependencies": {
     "gsap": "^2.0.2",
     "object-path": "^0.11.4",
-    "react": "^16.4.1"
+    "react": "^16.4.1",
+    "react-touch-events": "^2.1.0"
   },
   "repository": {
     "url": "https://github.com/Atomic-Reactor/re-carousel.git",
