@@ -4,7 +4,7 @@
   "main": "index.js",
   "author": "Cam Tullos <cam@tullos.ninja> (http://cam.tullos.ninja)",
   "dependencies": {
-    "gsap": "^2.0.2",
+    "gsap": "^3.0.1",
     "object-path": "^0.11.4",
     "react": "^16.4.1",
     "react-touch-events": "^2.1.0"
