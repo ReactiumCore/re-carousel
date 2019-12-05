@@ -14,6 +14,8 @@ I decided to roll yet another carousel because my basic needs couldn't be met by
 
 ## Installation
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/Atomic-Reactor/re-carousel.svg)](https://greenkeeper.io/)
+
 ```
 npm i --save reactium-carousel
 ```
